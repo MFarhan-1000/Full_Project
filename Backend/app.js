@@ -90,7 +90,26 @@ app.post("/savemedia", async (req, res) => {
   }
 });
 
-// 
+// saving message detail in database
+app.post("/save_post", async (req, res) => {
+  try {
+    const { title, message, user_id } = req.body;
+    if (message && user_id) {
+      const post_data = { title };
+      const post = new Post({
+        title: title,
+        user_id: user_id,
+        message: message,
+      });
+      const result = await post.save();
+      res.send(result);
+    } else {
+      res.status(400).send("Please Check your message OR User_id");
+    }
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
 
 // getting data for home page
 app.get("/getdata", async (req, res) => {
@@ -104,6 +123,23 @@ app.get("/getdata", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.send(500).send("Server Error");
+  }
+});
+
+// getting User data for update and delete
+app.get("/userprofile/:id", async (req, res) => {
+  console.log(req.params.id);
+  try {
+    const getdata = await Post.find({ "user_id": req.params.id });
+    if (getdata) {
+      console.log(getdata);
+      const result = getdata;
+      res.send(result);
+    } else {
+      res.status(404).send("No user data Found");
+    }
+  } catch (err) {
+    res.status(500).send("Server Error");
   }
 });
 

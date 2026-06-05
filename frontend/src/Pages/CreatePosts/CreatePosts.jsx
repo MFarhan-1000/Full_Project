@@ -5,9 +5,10 @@ function CreatePosts() {
   const [title, settitle] = useState("");
   const [img, setimg] = useState();
 
+  const [message, setmessage] = useState("");
+
   const [loading, setloading] = useState(false);
   const navigation = useNavigate();
-
 
   const user = localStorage.getItem("user");
   const user_parse = JSON.parse(user);
@@ -19,34 +20,51 @@ function CreatePosts() {
     const newform = new FormData();
     newform.append("media", img);
 
-    try {
-      let result = await fetch("http://localhost:3000/createposts", {
-        method: "POST",
-        body: newform,
-      });
-      const data = await result.json();
-      console.log(data);
-      
-      await saveImageUrl(data.path, data.originalname, data.mimetype);
-      navigation("/home");
-      
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setloading(false);
+    if (img) {
+      try {
+        let result = await fetch("http://localhost:3000/createposts", {
+          method: "POST",
+          body: newform,
+        });
+        const data = await result.json();
+        console.log(data);
+
+        await saveImageUrl(data.path, data.originalname, data.mimetype);
+        navigation("/home");
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setloading(false);
+      }
+    }else{
+      savepost();
     }
+
+    // saving to database start here
+
+    const saveImageUrl = async (url, filename, mimetype) => {
+      let result = await fetch("http://localhost:3000/savemedia", {
+        method: "POST",
+        body: JSON.stringify({ title, user_id, url, filename, mimetype }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let savedData = await result.json();
+      console.log(savedData);
+    };
   };
 
-  const saveImageUrl = async (url, filename, mimetype) => {
-    let result = await fetch("http://localhost:3000/savemedia", {
+  const savepost = async () => {
+    let post_result = await fetch("http://localhost:3000/save_post", {
       method: "POST",
-      body: JSON.stringify({ title, user_id, url, filename, mimetype }),
+      body: JSON.stringify({ title, message, user_id }),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    let savedData = await result.json();
-    console.log(savedData);
+    const message_data = await post_result.json();
+    console.log(message_data);
   };
 
   return (
@@ -75,9 +93,16 @@ function CreatePosts() {
           onChange={(e) => {
             setimg(e.target.files[0]);
           }}
-          required
+          // required
         />
 
+        <label htmlFor="message">Message</label>
+        <input
+          type="text"
+          id="message"
+          value={message}
+          onChange={(e) => setmessage(e.target.value)}
+        />
 
         <button type="submit"> {loading ? "Loading" : "Submit"}</button>
       </form>
