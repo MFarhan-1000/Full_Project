@@ -128,15 +128,26 @@ app.get("/getdata", async (req, res) => {
 
 // getting User data for update and delete
 app.get("/userprofile/:id", async (req, res) => {
-  console.log(req.params.id);
   try {
-    const getdata = await Post.find({ "user_id": req.params.id });
+    const getdata = await Post.find({ user_id: req.params.id });
     if (getdata) {
-      console.log(getdata);
       const result = getdata;
       res.send(result);
     } else {
       res.status(404).send("No user data Found");
+    }
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
+
+// Deleting Post
+app.delete("/delpost/:id", async (req, res) => {
+  try {
+    const del = await Post.findByIdAndDelete(req.params.id);
+    res.send(del);
+    if(!del){
+      return res.status(404).send("No data Found");
     }
   } catch (err) {
     res.status(500).send("Server Error");

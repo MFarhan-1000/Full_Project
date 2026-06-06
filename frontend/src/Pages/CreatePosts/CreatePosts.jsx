@@ -20,6 +20,20 @@ function CreatePosts() {
     const newform = new FormData();
     newform.append("media", img);
 
+    
+    // saving to database start here
+    const saveImageUrl = async (url, filename, mimetype) => {
+      let result = await fetch("http://localhost:3000/savemedia", {
+        method: "POST",
+        body: JSON.stringify({ title, user_id, url, filename, mimetype }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let savedData = await result.json();
+      console.log(savedData);
+    };
+
     if (img) {
       try {
         let result = await fetch("http://localhost:3000/createposts", {
@@ -40,19 +54,6 @@ function CreatePosts() {
       savepost();
     }
 
-    // saving to database start here
-
-    const saveImageUrl = async (url, filename, mimetype) => {
-      let result = await fetch("http://localhost:3000/savemedia", {
-        method: "POST",
-        body: JSON.stringify({ title, user_id, url, filename, mimetype }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      let savedData = await result.json();
-      console.log(savedData);
-    };
   };
 
   const savepost = async () => {
@@ -65,6 +66,8 @@ function CreatePosts() {
     });
     const message_data = await post_result.json();
     console.log(message_data);
+    setloading(false);
+    navigation("/home");
   };
 
   return (
