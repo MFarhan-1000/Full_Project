@@ -10,6 +10,9 @@ function CreatePosts() {
   const [loading, setloading] = useState(false);
   const navigation = useNavigate();
 
+  // what to post image or video
+  const [activetab, setactivetab] = useState("");
+
   const user = localStorage.getItem("user");
   const user_parse = JSON.parse(user);
   const user_id = user_parse._id;
@@ -20,7 +23,6 @@ function CreatePosts() {
     const newform = new FormData();
     newform.append("media", img);
 
-    
     // saving to database start here
     const saveImageUrl = async (url, filename, mimetype) => {
       let result = await fetch("http://localhost:3000/savemedia", {
@@ -50,10 +52,9 @@ function CreatePosts() {
       } finally {
         setloading(false);
       }
-    }else{
+    } else {
       savepost();
     }
-
   };
 
   const savepost = async () => {
@@ -74,38 +75,86 @@ function CreatePosts() {
     <div>
       <h1>Create Posts</h1>
 
+      <br />
+      <br />
+      <h1>Select what you want to do</h1>
+      <br />
+      <button
+        onClick={() => {
+          setactivetab("image");
+        }}
+      >
+        Add pic or video
+      </button>
+      <br />
+      <br />
+      <button
+        onClick={() => {
+          setactivetab("message");
+        }}
+      >
+        Add message or post
+      </button>
+
+      <br />
+      <br />
+
       <form onSubmit={PostsUpload}>
-        <label htmlFor="title">Enter Title Name</label>
-        <input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => {
-            settitle(e.target.value);
-          }}
-          required
-        />
-
         <br />
         <br />
 
-        <label htmlFor="file">Upload File here</label>
-        <input
-          id="file"
-          type="file"
-          onChange={(e) => {
-            setimg(e.target.files[0]);
-          }}
-          // required
-        />
+        {activetab === "image" && (
+          <div>
+            <label htmlFor="title">Enter Title Name</label>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => {
+                settitle(e.target.value);
+              }}
+              required
+            />
 
-        <label htmlFor="message">Message</label>
-        <input
-          type="text"
-          id="message"
-          value={message}
-          onChange={(e) => setmessage(e.target.value)}
-        />
+            <br /><br />
+
+            <label htmlFor="file">Upload File here</label>
+            <input
+              id="file"
+              type="file"
+              onChange={(e) => {
+                setimg(e.target.files[0]);
+              }}
+              // required
+            />
+          </div>
+        )}
+
+        {activetab === "message" && (
+          <div>
+            <label htmlFor="title">Enter Title Name</label>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => {
+                settitle(e.target.value);
+              }}
+              required
+            />
+            <br /><br />
+
+            <label htmlFor="message">Message</label>
+            <input
+              type="text"
+              id="message"
+              value={message}
+              onChange={(e) => setmessage(e.target.value)}
+            />
+          </div>
+        )}
+
+        <br /><br />
 
         <button type="submit"> {loading ? "Loading" : "Submit"}</button>
       </form>

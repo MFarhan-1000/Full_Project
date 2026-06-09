@@ -9,6 +9,8 @@ function Signup() {
   const [password, setpassword] = useState("");
   const navigation = useNavigate("");
 
+  const [error, seterror] = useState("");
+
   const SubmitData = async (e) => {
     e.preventDefault();
     console.log(name, age, email, password);
@@ -21,11 +23,11 @@ function Signup() {
         },
       });
       const data = await result.json();
-      localStorage.setItem("user", JSON.stringify(data));
-
       if (result.ok) {
+        localStorage.setItem("user", JSON.stringify(data));
         navigation("/home");
       } else {
+        seterror(data.message);
         navigation("/signup");
       }
     } catch (err) {
@@ -37,6 +39,19 @@ function Signup() {
   return (
     <div>
       <h1>Signup</h1>
+
+      {error ? (
+        <div
+          style={{
+            color: "red",
+            marginTop: "20px",
+            marginLeft: "10px",
+          }}
+        >
+          <h1>Error</h1>
+          <h2>{error}</h2>
+        </div>
+      ) : null}
 
       <form onSubmit={SubmitData}>
         <br />

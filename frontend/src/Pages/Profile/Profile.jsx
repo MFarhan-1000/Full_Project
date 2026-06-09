@@ -47,7 +47,7 @@ function Profile() {
         { item.message ? ( 
             <li>{item.message}</li>)
             :
-            (<li>{item.media?.filename}</li>)
+            (<li><img src={item.media?.url} alt="image" width={200} height={150} /></li>)
           }
 
           <li>

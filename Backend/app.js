@@ -18,13 +18,15 @@ const { upload } = require("./Config/Cloudinary");
 const User = require("./Model/User");
 const Post = require("./Model/Post");
 
-//singup page
+//signup page
 app.post("/signup", async (req, res) => {
   try {
     const { name, age, email, password } = req.body;
     const check = await User.findOne({ email });
     if (check) {
-      return res.status(401).send("User with email Already exists");
+      return res
+        .status(401)
+        .send({ message: "User with email Already exists" });
     } else {
       const addUser = { name, age, email, password };
       const saveUser = new User(addUser);
@@ -50,19 +52,27 @@ app.post("/login", async (req, res) => {
         const result = checkPassword;
         res.send(result);
       } else {
-        res.status(401).send("Please check your password");
+        res.status(401).send({ message: "Please check your password" });
       }
     } else {
-      res.status(404).send("No Email Found");
+      res.status(404).send({ message: "No Email Found" });
     }
   } else {
-    res.status(404).send("No Data Found");
+    res.status(404).send({ message: "No Data Found" });
   }
 });
 
 // Creating a post
 app.post("/createposts", upload.single("media"), (req, res) => {
-  res.send(req.file);
+  try {
+    if(req.file){
+      res.send(req.file);
+    }else{
+      res.status(400).send({message: "File not found"})
+    }
+  } catch (err) {
+    res.status(500).send({ message: "Server Error" });
+  }
 });
 
 // saving image details in database
@@ -146,7 +156,7 @@ app.delete("/delpost/:id", async (req, res) => {
   try {
     const del = await Post.findByIdAndDelete(req.params.id);
     res.send(del);
-    if(!del){
+    if (!del) {
       return res.status(404).send("No data Found");
     }
   } catch (err) {

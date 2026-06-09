@@ -5,6 +5,7 @@ function Login() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const navigation = useNavigate();
+  const [error, seterror] = useState("");
 
   const LoginData = async (e) => {
     e.preventDefault();
@@ -24,6 +25,7 @@ function Login() {
         navigation("/home");
         localStorage.setItem("user", JSON.stringify(data));
       } else {
+        seterror(data.message);
         navigation("/login");
       }
     } catch (err) {
@@ -33,6 +35,21 @@ function Login() {
 
   return (
     <div>
+
+      {error ? (
+        <div style={{
+          color: "red",
+          margin: "20px",
+        }}>
+
+      <h1>Error</h1>
+      <h2>{error}</h2>
+        </div>)
+        : 
+        (null)
+      }
+
+
       <form onSubmit={LoginData}>
         <label htmlFor="email">Enter Your Email</label>
         <input
@@ -69,3 +86,4 @@ function Login() {
 }
 
 export default Login;
+
