@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 
+
 const mongoose_url = process.env.mongoose_url;
 
 function main(){

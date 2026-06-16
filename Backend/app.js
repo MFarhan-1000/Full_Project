@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
 
-const dotenv = require("dotenv");
-dotenv.config();
+
+// require("dotenv").config();
+
+// Dotenv file here
+require("dotenv").config();
 
 const port = process.env.PORT;
 const cors = require("cors");
 
-require("dotenv").config();
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +22,7 @@ const { upload } = require("./Config/Cloudinary");
 // Database import here
 const User = require("./Model/User");
 const Post = require("./Model/Post");
+
 
 //signup page
 app.post("/signup", async (req, res) => {
