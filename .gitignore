@@ -1,0 +1,4 @@
+.env
+node_modules/
+
+mongodb+srv://farhanfk1000_db_user:<db_password>@cluster0.xwwxxgy.mongodb.net/?appName=Cluster0
