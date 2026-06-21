@@ -16,10 +16,13 @@ function Navbar() {
   };
 
   return (
-    <div>
-      <ul>
+    <div className="bg-blue-300">
+      
+      <div>
+
+      <ul className="flex flex-row gap-4 justify-center p-2  ">
         {auth ? (
-          <ul>
+          <>
             <li>
               <Link to={"/home"}>Home</Link>
             </li>
@@ -33,20 +36,26 @@ function Navbar() {
             <li>
               <button onClick={logout}>Logout</button>
             </li>
-          </ul>
+          </>
         ) : (
-          <ul>
+          <>
             <li>
               <Link to={"/login"}>Login</Link>
             </li>
             <li>
               <Link to={"/signup"}>Signup</Link>
             </li>
-          </ul>
+          </>
         )}
       </ul>
+      </div>
+
+
+    
+
     </div>
   );
 }
 
 export default Navbar;
+
